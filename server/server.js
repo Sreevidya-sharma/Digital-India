@@ -13,9 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static HTML files
-app.use(express.static(path.join(__dirname, '../html')));
+app.use(express.static(path.join(__dirname, '..')));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../html/home.html'));
+  res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
 });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
