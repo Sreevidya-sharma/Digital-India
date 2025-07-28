@@ -9,7 +9,10 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://digital-india-vnzk.onrender.com',
+  credentials: true
+}));
 app.use(express.json());
 
 const basePath = path.join(__dirname, '..');
