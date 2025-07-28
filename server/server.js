@@ -15,26 +15,29 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
 app.use(express.json());
 
-// Serve static folders cleanly from root
 app.use('/css', express.static(path.join(__dirname, '../css')));
 app.use('/js', express.static(path.join(__dirname, '../js')));
 app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use('/lang', express.static(path.join(__dirname, '../lang')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(path.join(__dirname, '../html'))); // serves html + all subfolders
+app.use(express.static(path.join(__dirname, '../html')));
 
-// Serve home.html on /
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
-// API routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/aadhaar', require('./routes/aadhaarRoutes'));
 app.use('/api/digilocker', require('./routes/digilockerRoutes'));
