@@ -13,9 +13,11 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static HTML files
-app.use(express.static(path.join(__dirname, 'html')));
+const basePath = path.join(__dirname, '..');
+app.use('/css', express.static(path.join(basePath, 'css')));
+app.use(express.static(path.join(basePath, 'html')));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'html', 'home.html'));
+  res.sendFile(path.join(basePath, 'html', 'home.html'));
 });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
