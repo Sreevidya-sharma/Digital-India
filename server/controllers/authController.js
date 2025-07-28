@@ -4,10 +4,13 @@ const jwt = require('jsonwebtoken');
 
 const registerUser = async (req, res) => {
   try {
-    const { fullName, email, phoneNumber, password } = req.body;
+    const { fullName, email, phoneNumber, password, gender, dob, address } = req.body;
 
-    // Check for existing email or phone
-    const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+    // Check for existing email or phone number
+    const existingUser = await User.findOne({
+      $or: [{ email }, { phoneNumber }],
+    });
+
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists with this email or phone.' });
     }
@@ -15,10 +18,14 @@ const registerUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create new user
     const newUser = new User({
       fullName,
       email,
       phoneNumber,
+      gender,
+      dob,
+      address,
       password: hashedPassword,
     });
 
@@ -35,6 +42,7 @@ const loginUser = async (req, res) => {
   try {
     const { emailOrPhone, password } = req.body;
 
+    // Find user by email or phone
     const user = await User.findOne({
       $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
     });
@@ -48,6 +56,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '2h',
     });
@@ -60,6 +69,9 @@ const loginUser = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         phoneNumber: user.phoneNumber,
+        gender: user.gender,
+        dob: user.dob,
+        address: user.address,
       },
     });
   } catch (err) {
@@ -69,3 +81,5 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = { registerUser, loginUser };
+
+
