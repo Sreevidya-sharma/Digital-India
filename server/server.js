@@ -19,6 +19,7 @@ const basePath = path.join(__dirname, '..');
 
 app.use('/css', express.static(path.join(basePath, 'css')));
 app.use('/images', express.static(path.join(basePath, 'images')));
+app.use('/js', express.static(path.join(basePath, 'js')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(basePath, 'html')));
 
