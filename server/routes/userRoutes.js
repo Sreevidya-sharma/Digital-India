@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const protect = require('../middleware/authMiddleware'); // use shared auth middleware
+const protect = require('../middleware/authMiddleware');
 
 // ✅ GET: User profile
 router.get('/profile', protect, async (req, res) => {
@@ -33,4 +33,8 @@ router.post('/complete', protect, async (req, res) => {
 });
 
 // ✅ GET: Certificate preview
+router.get('/certificate', protect, async (req, res) => {
+  res.json({ message: 'Certificate preview route working!' });
+});
+
 module.exports = router;
