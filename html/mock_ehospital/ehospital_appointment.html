@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="ehospital_book_title">Book Appointment | eHospital Demo</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ehospital.css" />
+  <script src="../../js/i18n.js" defer></script>
+  <link rel="icon" href="../../images/india.png" type="image/png" />
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-right">
+      <select id="languageSelect" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="bn">বাংলা</option>
+        <option value="te">తెలుగు</option>
+        <option value="mr">मराठी</option>
+        <option value="ta">தமிழ்</option>
+        <option value="gu">ગુજરાતી</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ml">മലയാളം</option>
+        <option value="pa">ਪੰਜਾਬੀ</option>
+        <option value="or">ଓଡ଼ିଆ</option>
+        <option value="ur">اردو</option>
+      </select>
+      <a href="../login.html" class="login-btn" data-i18n="login">Login</a>
+    </div>
+  </div>
+
+  <header class="gov-header full-width-header">
+    <div class="header-left">
+      <img src="../../images/logo.png" alt="Digital India Access Logo" class="site-logo pulse-animation" />
+    </div>
+    <div class="header-title">
+      <h1 data-i18n="title">Digital India Access Training</h1>
+      <p data-i18n="mission">Digital India Mission</p>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <a href="../home.html" data-i18n="nav_home">Home</a>
+    <a href="../courses.html" class="active" data-i18n="nav_courses">Courses</a>
+    <a href="../quiz.html" data-i18n="nav_quiz">Quiz</a>
+    <a href="../certificate.html" data-i18n="nav_certificate">Certificate</a>
+    <a href="../dashboard.html" data-i18n="nav_dashboard">Dashboard</a>
+  </nav>
+
+  <main class="appointment-container">
+    <h2 data-i18n="ehospital_book_heading">Book an Appointment</h2>
+    <form id="appointmentForm">
+      <label for="name" data-i18n="ehospital_book_name">Full Name</label>
+      <input type="text" id="name" placeholder="Enter your full name" required />
+
+      <label for="age" data-i18n="ehospital_book_age">Age</label>
+      <input type="number" id="age" placeholder="Enter your age" required />
+
+      <label for="gender" data-i18n="ehospital_book_gender">Gender</label>
+      <select id="gender" required>
+        <option value="">-- Select Gender --</option>
+        <option value="Male" data-i18n="gender_male">Male</option>
+        <option value="Female" data-i18n="gender_female">Female</option>
+        <option value="Other" data-i18n="gender_other">Other</option>
+      </select>
+
+      <label for="mobile" data-i18n="ehospital_book_mobile">Mobile Number</label>
+      <input type="tel" id="mobile" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required />
+
+      <label for="hospital" data-i18n="ehospital_book_hospital">Select Hospital</label>
+      <select id="hospital" required>
+        <option value="">-- Choose Hospital --</option>
+        <option>AIIMS Delhi</option>
+        <option>Safdarjung Hospital</option>
+        <option>PGIMER Chandigarh</option>
+        <option>JIPMER Puducherry</option>
+      </select>
+
+      <label for="department" data-i18n="ehospital_book_department">Department / Doctor</label>
+      <select id="department" required>
+        <option value="">-- Choose Department --</option>
+        <option>General Medicine</option>
+        <option>Pediatrics</option>
+        <option>Orthopedics</option>
+        <option>Gynecology</option>
+      </select>
+
+      <label for="date" data-i18n="ehospital_book_date">Preferred Date</label>
+      <input type="date" id="date" required />
+
+      <button type="submit" data-i18n="ehospital_book_submit">Book Appointment</button>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display: none;"></div>
+  </main>
+
+<script>
+  function getAuthHeaders() {
+    return {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    };
+  }
+
+  document.getElementById("appointmentForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const appointment = {
+      name: document.getElementById('name').value.trim(),
+      age: parseInt(document.getElementById('age').value, 10),
+      gender: document.getElementById('gender').value,
+      mobile: document.getElementById('mobile').value.trim(),
+      hospital: document.getElementById('hospital').value,
+      department: document.getElementById('department').value,
+      date: document.getElementById('date').value
+    };
+
+    try {
+      const res = await fetch('http://localhost:3001/api/ehospital/appointments', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(appointment)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('lastPatientId', data.patientId);
+        localStorage.setItem('lastPatientName', appointment.name);
+
+        document.getElementById("successMessage").style.display = "block";
+        document.getElementById("successMessage").innerHTML = `
+          <p style="color: green;">✅ Your appointment has been booked successfully!</p>
+          <p><strong>Patient ID:</strong> ${data.patientId}</p>
+          <p><strong>Patient Name:</strong> ${appointment.name}</p>
+        `;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        alert(data.message || 'Appointment booking failed.');
+      }
+    } catch (err) {
+      console.error('Appointment error:', err);
+      alert('Server error. Please try again.');
+    }
+  });
+</script>
+
+<script>
+  // <![CDATA[
+  if ('WebSocket' in window) {
+    (function () {
+      function refreshCSS() {
+        var sheets = [].slice.call(document.getElementsByTagName("link"));
+        var head = document.getElementsByTagName("head")[0];
+        for (var i = 0; i < sheets.length; ++i) {
+          var elem = sheets[i];
+          var parent = elem.parentElement || head;
+          parent.removeChild(elem);
+          var rel = elem.rel;
+          if (elem.href && (typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet")) {
+            var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+            elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+          }
+          parent.appendChild(elem);
+        }
+      }
+      var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+      var address = protocol + window.location.host + window.location.pathname + '/ws';
+      var socket = new WebSocket(address);
+      socket.onmessage = function (msg) {
+        if (msg.data == 'reload') window.location.reload();
+        else if (msg.data == 'refreshcss') refreshCSS();
+      };
+      if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+        console.log('Live reload enabled.');
+        sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+      }
+    })();
+  } else {
+    console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+  }
+  // ]]>
+</script>
+</body>
+</html>
