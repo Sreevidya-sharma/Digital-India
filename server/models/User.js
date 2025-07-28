@@ -15,29 +15,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  gender: {
-    type: String,
-  },
-  dob: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
   password: {
     type: String,
     required: true,
   },
   completedModules: {
     type: [String],
-    default: [],
+    default: []
   },
   quizStatus: {
     type: Map,
     of: String,
-    default: {},
+    default: {}
   }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
-
