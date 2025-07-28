@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static HTML files
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '../html')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
 });
