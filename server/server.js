@@ -12,17 +12,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static folders explicitly
+// Serve static folders cleanly from root
 app.use('/css', express.static(path.join(__dirname, '../css')));
 app.use('/js', express.static(path.join(__dirname, '../js')));
 app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use('/lang', express.static(path.join(__dirname, '../lang')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/html', express.static(path.join(__dirname, '../html')));
+app.use(express.static(path.join(__dirname, '../html'))); // serves html + all subfolders
 
-// Serve home.html on root
+// Serve home.html on /
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
+  res.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
 // API routes
