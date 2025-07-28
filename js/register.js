@@ -4,10 +4,12 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   const fullName = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phoneNumber = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
   const password = document.getElementById('password').value.trim();
   const confirm = document.getElementById('confirm').value.trim();
+  const gender = document.getElementById('gender').value;
+  const dob = document.getElementById('dob').value;
 
-  // 🔐 Validate password strength
   const isStrong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
   if (!isStrong) {
     alert('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
@@ -20,27 +22,16 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   }
 
   try {
-    // 🌐 Backend API call
-    const res = await fetch('http://localhost:3001/api/register', {
+    const res = await fetch('https://digital-india-auth-server.onrender.com/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fullName, email, phoneNumber, gender, dob, address, password })
+      body: JSON.stringify({ fullName, email, phoneNumber, address, password, gender, dob })
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      // 💾 Store user details locally
-      const userDetails = {
-        name: fullName,
-        email,
-        phone: phoneNumber,
-        gender: '',         // Can be updated later
-        dob: '',            // Optional: Add date input if needed
-        address: ''         // Will be filled during Aadhaar flow
-      };
-      localStorage.setItem('userDetails', JSON.stringify(userDetails));
-
+      localStorage.setItem('userDetails', JSON.stringify({ fullName, email, phoneNumber, address, gender, dob }));
       alert('✅ Registration successful! You can now log in.');
       window.location.href = 'login.html';
     } else {
