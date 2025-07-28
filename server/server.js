@@ -9,11 +9,13 @@ connectDB();
 
 const app = express();
 
+// ✅ Allowed origins
 const allowedOrigins = [
   'http://localhost:5500',
   'https://digital-india-vnzk.onrender.com'
 ];
 
+// ✅ CORS configuration
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -25,8 +27,13 @@ app.use(cors({
   credentials: true
 }));
 
+// ✅ Handle preflight requests (important for POST/PUT requests from frontend)
+app.options('*', cors());
+
+// ✅ Middleware
 app.use(express.json());
 
+// ✅ Static file serving
 app.use('/css', express.static(path.join(__dirname, '../css')));
 app.use('/js', express.static(path.join(__dirname, '../js')));
 app.use('/images', express.static(path.join(__dirname, '../images')));
@@ -34,10 +41,12 @@ app.use('/lang', express.static(path.join(__dirname, '../lang')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, '../html')));
 
+// ✅ Home route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
+// ✅ API routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/aadhaar', require('./routes/aadhaarRoutes'));
 app.use('/api/digilocker', require('./routes/digilockerRoutes'));
@@ -45,5 +54,6 @@ app.use('/api/ehospital', require('./routes/ehospitalRoutes'));
 app.use('/api/quiz', require('./routes/quizRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
+// ✅ Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`🔌 Server started on port ${PORT}`));
