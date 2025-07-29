@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const modules = ['aadhaar', 'digilocker', 'ehospital'];
 
   try {
-    const profileRes = await fetch('http://localhost:3001/api/user/profile', {
+    const profileRes = await fetch('https://digital-india-vnzk.onrender.com/api/user/profile', {
       headers: getAuthHeaders()
     });
 
