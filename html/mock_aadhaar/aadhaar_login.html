@@ -121,7 +121,7 @@
       const captchaText = document.getElementById('captchaCode').textContent;
 
       try {
-        const res = await fetch('http://localhost:3001/api/aadhaar/send-otp', {
+        const res = await fetch('https://digital-india-vnzk.onrender.com/api/aadhaar/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ aadhaarNumber: aadhaar })
