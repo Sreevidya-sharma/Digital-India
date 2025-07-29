@@ -83,7 +83,7 @@ document.getElementById("labForm").addEventListener("submit", async function(e) 
   const resultDiv = document.getElementById("reportResult");
 
   try {
-    const res = await fetch(`https://digital-india-vnzk.onrender.com/api/ehospital/labreport?labId=${encodeURIComponent(labId)}{encodeURIComponent(labId)}`, {
+    const res = await fetch(`https://digital-india-vnzk.onrender.com/api/ehospital/labreport?labId=${encodeURIComponent(labId)}`, {
       headers: getAuthHeaders()
     });
 
