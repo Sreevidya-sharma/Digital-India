@@ -192,7 +192,7 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
   const result = document.getElementById('quizResult');
 
   try {
-    const res = await fetch('http://localhost:3001/api/quiz/submit', {
+    const res = await fetch('https://digital-india-vnzk.onrender.com/api/quiz/submit', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -210,7 +210,7 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
       if (score >= passing) {
         result.innerHTML = `✅ You passed! Score: ${score}/${allKeys.length}<br><a href='../certificate.html?module=aadhaar' class='cta-btn'>Download Certificate</a>`;
       // ✅ Mark Aadhaar module as completed
-const completeRes = await fetch('http://localhost:3001/api/user/complete', {
+const completeRes = await fetch('https://digital-india-vnzk.onrender.com/api/user/complete', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
