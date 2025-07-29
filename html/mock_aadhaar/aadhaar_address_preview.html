@@ -79,12 +79,12 @@
       }
 
       try {
-        const profileRes = await fetch('http://localhost:3001/api/user/profile', {
+        const profileRes = await fetch('https://digital-india-vnzk.onrender.com/api/user/profile', {
           headers: { Authorization: 'Bearer ' + token }
         });
         const profile = await profileRes.json();
 
-        const aadhaarRes = await fetch('http://localhost:3001/api/aadhaar/address/preview', {
+        const aadhaarRes = await fetch('https://digital-india-vnzk.onrender.com/api/aadhaar/address/preview', {
           headers: { Authorization: 'Bearer ' + token }
         });
         const aadhaar = await aadhaarRes.json();
