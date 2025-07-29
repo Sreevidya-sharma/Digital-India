@@ -33,7 +33,7 @@ const bookAppointment = async (req, res) => {
         res.status(201).json({
             message: 'Appointment booked successfully!',
             appointmentId: appointment._id, // Return a unique ID for reference
-            patientId: req.user._id // You might want a separate patient ID or use user ID
+            patientId: req.user._id.toString() // Convert ObjectId to string for display
         });
 
     } catch (error) {
