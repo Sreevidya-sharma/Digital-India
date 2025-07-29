@@ -190,7 +190,7 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
 
   try {
     // ✅ Submit quiz answers
-    const quizRes = await fetch('http://localhost:3001/api/quiz/submit', {
+    const quizRes = await fetch('https://digital-india-vnzk.onrender.com/api/quiz/submit', {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({
@@ -207,7 +207,7 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
 
     // ✅ If passed, mark module as completed
     if (score >= passing) {
-      const completeRes = await fetch('http://localhost:3001/api/user/complete', {
+      const completeRes = await fetch('https://digital-india-vnzk.onrender.com/api/user/complete', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ moduleName: 'digilocker' })
