@@ -11,8 +11,10 @@ const app = express();
 
 app.use(cors({
   origin: 'https://digital-india-vnzk.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
+app.options('*', cors());
 app.use(express.json());
 
 const basePath = path.join(__dirname, '..');
