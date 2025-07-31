@@ -18,14 +18,14 @@
         <option value="hi">हिंदी</option>
         <option value="bn">বাংলা</option>
         <option value="te">తెలుగు</option>
-        <option value="mr">मराठी</option>
+        <option value="mr">মराठी</option>
         <option value="ta">தமிழ்</option>
         <option value="gu">ગુજરાતી</option>
         <option value="kn">ಕನ್ನಡ</option>
         <option value="ml">മലയാളം</option>
         <option value="pa">ਪੰਜਾਬੀ</option>
         <option value="or">ଓଡ଼ିଆ</option>
-        <option value="ur">اردو</option>
+        <option value="ur">اردু</option>
       </select>
       <a href="../login.html" class="login-btn" data-i18n="login">Login</a>
     </div>
@@ -70,85 +70,49 @@
   </main>
 
   <script>
-function getAuthHeaders() {
-  return {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
-  };
-}
-
-document.getElementById("labForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const labId = document.getElementById("labId").value.trim();
-  const resultDiv = document.getElementById("reportResult");
-
-  try {
-    const res = await fetch(`https://digital-india-vnzk.onrender.com/api/ehospital/labreport?labId=${encodeURIComponent(labId)}`, {
-      headers: getAuthHeaders()
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      const patientName = data.patientName || localStorage.getItem('lastPatientName') || "N/A";
-
-      document.getElementById("rPatientName").textContent = patientName;
-      document.getElementById("rLabId").textContent = data.labId || "N/A";
-      document.getElementById("rWBC").textContent = data.wbc || "—";
-      document.getElementById("rRBC").textContent = data.rbc || "—";
-      document.getElementById("rHB").textContent = data.hemoglobin || "—";
-      document.getElementById("rPlatelet").textContent = data.platelet || "—";
-      document.getElementById("rStatus").textContent = data.status || "—";
-
-      resultDiv.style.display = "block";
-      window.scrollTo({ top: resultDiv.offsetTop, behavior: "smooth" });
-    } else {
-      alert(data.message || 'Lab report not found.');
-      resultDiv.style.display = "none";
+    function getAuthHeaders() {
+      return {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      };
     }
-  } catch (err) {
-    console.error('Error fetching lab report:', err);
-    alert('Server error. Please try again.');
-    resultDiv.style.display = "none";
-  }
-});
-</script>
-  <script>
-	// <![CDATA[
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && (typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet")) {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
+
+    document.getElementById("labForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const labId = document.getElementById("labId").value.trim();
+      const resultDiv = document.getElementById("reportResult");
+    
+      try {
+        const res = await fetch(`https://digital-india-vnzk.onrender.com/api/ehospital/labreport?labId=${encodeURIComponent(labId)}`, {
+          method: 'GET', // Explicitly declare the GET method
+          headers: getAuthHeaders()
+        });
+    
+        const data = await res.json();
+    
+        if (res.ok) {
+          const patientName = data.patientName || localStorage.getItem('lastPatientName') || "N/A";
+    
+          document.getElementById("rPatientName").textContent = patientName;
+          document.getElementById("rLabId").textContent = data.labId || "N/A";
+          document.getElementById("rWBC").textContent = data.wbc || "—";
+          document.getElementById("rRBC").textContent = data.rbc || "—";
+          document.getElementById("rHB").textContent = data.hemoglobin || "—";
+          document.getElementById("rPlatelet").textContent = data.platelet || "—";
+          document.getElementById("rStatus").textContent = data.status || "—";
+    
+          resultDiv.style.display = "block";
+          window.scrollTo({ top: resultDiv.offsetTop, behavior: "smooth" });
+        } else {
+          alert(data.message || 'Lab report not found.');
+          resultDiv.style.display = "none";
+        }
+      } catch (err) {
+        console.error('Error fetching lab report:', err);
+        alert('Server error. Please try again.');
+        resultDiv.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
