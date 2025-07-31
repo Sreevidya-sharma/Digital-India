@@ -29,6 +29,10 @@ const bookAppointment = async (req, res) => {
             time: time || 'Flexible' // Placeholder if time is optional from frontend
         });
 
+        // ADDED CONSOLE LOGS FOR DEBUGGING:
+        console.log('Created Appointment Object:', appointment);
+        console.log('Appointment ID from Backend (raw _id):', appointment._id);
+
         // Respond with success message and new appointment details
         res.status(201).json({
             message: 'Appointment booked successfully!',
