@@ -3,8 +3,8 @@ const router = express.Router();
 const protect = require('../middleware/authMiddleware');
 const { Appointment, IPD, LabReport } = require('../models/eHospital');
 
-// POST /api/ehospital/appointments
-router.post('/appointments', protect, async (req, res) => {
+// POST /api/ehospital/appointment (Changed from '/appointments' to '/appointment')
+router.post('/appointment', protect, async (req, res) => {
     const { department, doctor, date, time } = req.body;
     try {
         const appointment = await Appointment.create({
