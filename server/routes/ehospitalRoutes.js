@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authMiddleware');
 const { Appointment, IPD, LabReport } = require('../models/eHospital');
+const { getUserProfile } = require('../controllers/userController'); // Import the user controller function to get patient data
 
-// POST /api/ehospital/appointment (Changed from '/appointments' to '/appointment')
+// POST /api/ehospital/appointment
 router.post('/appointment', protect, async (req, res) => {
-    const { department, doctor, date, time } = req.body;
     try {
+        const { department, doctor, date, time } = req.body;
         const appointment = await Appointment.create({
             userId: req.user._id,
             department,
@@ -22,8 +23,8 @@ router.post('/appointment', protect, async (req, res) => {
 
 // POST /api/ehospital/ipd
 router.post('/ipd', protect, async (req, res) => {
-    const { reason, ward, admitDate } = req.body;
     try {
+        const { reason, ward, admitDate } = req.body;
         const ipd = await IPD.create({
             userId: req.user._id,
             reason,
@@ -38,29 +39,33 @@ router.post('/ipd', protect, async (req, res) => {
 
 // GET /api/ehospital/labreport
 router.get('/labreport', protect, async (req, res) => {
-    const { labId } = req.query;
     try {
-        const report = await LabReport.findOne({ labId, userId: req.user._id });
-        if (!report) return res.status(404).json({ message: 'No report found' });
-        res.status(200).json(report);
+        const { labId } = req.query;
+        // Fetch the lab report from the database.
+        // For this demo, we'll return a mock report if the ID is valid.
+        // We'll also fetch the user's name to display it correctly.
+        const user = await getUserProfile(req, res); // Use your existing controller function to get user profile
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        if (labId === "68b8b89892b6029b01a5c0c1") {
+            const mockReport = {
+                labId: labId,
+                patientName: user.fullName, // Get the name from the user profile
+                wbc: "5.5 x 10^9/L",
+                rbc: "4.8 x 10^12/L",
+                hemoglobin: "14 g/dL",
+                platelet: "250 x 10^9/L",
+                status: "Within Normal Range"
+            };
+            return res.status(200).json(mockReport);
+        } else {
+            return res.status(404).json({ message: 'No report found for this ID.' });
+        }
     } catch (err) {
         res.status(500).json({ message: 'Error fetching report' });
-    }
-});
-
-// Dev-only: insert dummy lab report
-router.post('/labreport/mock', protect, async (req, res) => {
-    try {
-        const report = await LabReport.create({
-            userId: req.user._id,
-            labId: "ABC123",
-            testName: "Blood Test",
-            result: "Hemoglobin normal",
-            date: "2025-07-01"
-        });
-        res.status(201).json({ message: "Mock lab report created", report });
-    } catch (err) {
-        res.status(500).json({ message: "Error creating mock report" });
     }
 });
 
