@@ -27,14 +27,12 @@ app.use(express.json());
 // Define the base path for static assets (assuming 'src' is the root of your project)
 const basePath = path.join(__dirname, '..');
 
-// Serve static files from respective directories
+// Serve static files from respective directories. These should come BEFORE your API routes.
 app.use('/css', express.static(path.join(basePath, 'css')));
 app.use('/images', express.static(path.join(basePath, 'images')));
 app.use('/js', express.static(path.join(basePath, 'js')));
 app.use('/lang', express.static(path.join(basePath, 'lang')));
-// Serve uploads from a directory within the server folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Serve HTML files as static assets (this might implicitly catch some routes)
 app.use(express.static(path.join(basePath, 'html')));
 
 // Define the root route to serve home.html
@@ -42,21 +40,17 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(basePath, 'html', 'home.html'));
 });
 
-// Mount API routes
+// --- Mount ALL API routes here, AFTER serving static files ---
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/aadhaar', require('./routes/aadhaarRoutes'));
 app.use('/api/digilocker', require('./routes/digilockerRoutes'));
-
-// This is the correct way to mount the ehospital routes. 
-// It will correctly handle '/api/ehospital/labreport', '/api/ehospital/ipd', etc.
 app.use('/api/ehospital', require('./routes/ehospitalRoutes'));
-
 app.use('/api/quiz', require('./routes/quizRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
-// --- IMPORTANT: Add this catch-all route at the very end of your routes ---
-// This handles any requests that don't match the above defined routes.
-// In Express v5, wildcards like '*' need a name.
+
+// --- IMPORTANT: This catch-all route must be the LAST route defined ---
+// It handles any requests that do not match the routes above.
 app.use('/*splat', (req, res) => {
     // Log the original URL to help debug what path was not found
     console.log(`404 Not Found: ${req.originalUrl}`);
