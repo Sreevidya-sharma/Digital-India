@@ -115,7 +115,7 @@
       };
 
       try {
-        const res = await fetch('http://localhost:3001/api/ehospital/ipd', {
+        const res = await fetch('https://digital-india-vnzk.onrender.com/api/ehospital/ipd', {
           method: 'POST',
           headers: getAuthHeaders(),
           body: JSON.stringify(payload)
