@@ -18,12 +18,16 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
+// Handle preflight requests for all routes
 app.options('*', cors());
 
+// Middleware to parse JSON request bodies
 app.use(express.json());
 
+// Define the base path for static assets
 const basePath = path.join(__dirname, '..');
 
+// Serve static files from respective directories
 app.use('/css', express.static(path.join(basePath, 'css')));
 app.use('/images', express.static(path.join(basePath, 'images')));
 app.use('/js', express.static(path.join(basePath, 'js')));
@@ -31,11 +35,12 @@ app.use('/lang', express.static(path.join(basePath, 'lang')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(basePath, 'html')));
 
+// Define the root route to serve home.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(basePath, 'html', 'home.html'));
 });
 
-// --- Mount ALL API routes here ---
+// Mount ALL API routes here, AFTER static file serving
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/aadhaar', require('./routes/aadhaarRoutes'));
 app.use('/api/digilocker', require('./routes/digilockerRoutes'));
