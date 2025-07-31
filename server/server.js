@@ -46,7 +46,11 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/aadhaar', require('./routes/aadhaarRoutes'));
 app.use('/api/digilocker', require('./routes/digilockerRoutes'));
+
+// This is the correct way to mount the ehospital routes. 
+// It will correctly handle '/api/ehospital/labreport', '/api/ehospital/ipd', etc.
 app.use('/api/ehospital', require('./routes/ehospitalRoutes'));
+
 app.use('/api/quiz', require('./routes/quizRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
