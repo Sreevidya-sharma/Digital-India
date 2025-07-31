@@ -40,29 +40,29 @@ router.post('/ipd', protect, async (req, res) => {
 router.get('/labreport', protect, async (req, res) => {
     try {
         const { labId } = req.query;
-        const userId = req.user._id; // Use the userId from the authenticated user
 
-        // This is a mock implementation that checks for a specific ID
-        // and returns a mock report, otherwise it returns 404.
-        const mockLabId = "68b8b89892b6029b01a5c0c1";
-
-        if (labId === mockLabId) {
-            const mockReport = {
-                labId: mockLabId,
-                patientName: req.user.fullName, // Access the name directly from req.user
-                wbc: "5.5 x 10^9/L",
-                rbc: "4.8 x 10^12/L",
-                hemoglobin: "14 g/dL",
-                platelet: "250 x 10^9/L",
-                status: "Within Normal Range"
-            };
-            return res.status(200).json(mockReport);
-        } else {
-            return res.status(404).json({ message: 'No report found for this ID.' });
+        if (!labId) {
+            return res.status(400).json({ message: 'Lab ID is required to fetch a report.' });
         }
+        
+        // This is a simple mock implementation for demonstration purposes.
+        // It always returns the same report if a labId is provided.
+        const mockReport = {
+            labId: labId, // Return the ID that was submitted
+            patientName: "Thotapalli Sreevidya", // Use a hardcoded name for consistency
+            wbc: "5.5 x 10^9/L",
+            rbc: "4.8 x 10^12/L",
+            hemoglobin: "14 g/dL",
+            platelet: "250 x 10^9/L",
+            status: "Within Normal Range"
+        };
+        
+        return res.status(200).json(mockReport);
+        
     } catch (err) {
         console.error('Error fetching lab report:', err);
         res.status(500).json({ message: 'Error fetching report' });
     }
 });
+
 module.exports = router;
