@@ -64,30 +64,19 @@
 
 <script>
 async function uploadDoc() {
-  const token = localStorage.getItem('digiToken');
-  if (!token) {
-    alert('⚠️ You are not logged in');
-    window.location.href = '../../html/login.html';
-    return;
-  }
-
-  const fileInput = document.getElementById('fileUpload');
-  if (!fileInput.files.length) {
-    alert('Please choose a file first.');
-    return;
-  }
+  // ... (login token check and file input validation) ...
 
   const formData = new FormData();
   formData.append('file', fileInput.files[0]);
 
   try {
-    const res = await fetch('https://digital-india-vnzk.onrender.com/api/digilocker/upload', {
+    const res = await fetch('http://localhost:3001/api/digilocker/upload', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` },
       body: formData
     });
 
-    const data = await res.json();
+    const data = await res.json(); // This line attempts to parse the response as JSON
 
     if (res.ok) {
       alert('✅ Document uploaded!');
@@ -100,11 +89,6 @@ async function uploadDoc() {
     alert('⚠️ Upload failed. Try again.');
   }
 }
-
-document.querySelector('form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  uploadDoc();
-});
 </script>
 </body>
 </html>
