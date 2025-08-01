@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchDocuments() {
   const container = document.getElementById('documentsList');
   try {
-    const res = await fetch('http://localhost:3001/api/digilocker/documents', {
+    const res = await fetch('https://your-backend-app-name.onrender.com/api/digilocker/documents', {
       headers: getDigiHeaders()
     });
 
