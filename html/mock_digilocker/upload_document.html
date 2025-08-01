@@ -70,7 +70,7 @@ async function uploadDoc() {
   formData.append('file', fileInput.files[0]);
 
   try {
-    const res = await fetch('http://localhost:3001/api/digilocker/upload', {
+    const res = await fetch('https://your-backend-app-name.onrender.com/api/digilocker/upload', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` },
       body: formData
